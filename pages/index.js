@@ -2,48 +2,103 @@ import { colors } from "../colors"
 import Header from "../components/Header"
 import { FcGoogle } from 'react-icons/fc'
 import { AiFillApple } from 'react-icons/ai'
+import { AuthError } from "../components/AuthError"
 
-import { getAuth, signInWithPopup, GoogleAuthProvider, OAuthProvider } from 'firebase/auth'
+import { 
+  getAuth, 
+  signInWithPopup, 
+  GoogleAuthProvider, 
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword
+} from 'firebase/auth'
 import { firebaseApp } from "../firebase/firebaseConfig"
+import { useState } from "react"
+import { useRouter } from "next/router"
 
 export default function Home() {
 
+  const [ email, setEmail ] = useState('')
+  const [ password, setPassword ] = useState('')
+  const [ authError, setAuthError ] = useState(false)
+  const router = useRouter()
+
   const firebaseAuth = getAuth(firebaseApp)
   const providerGoogle = new GoogleAuthProvider()
-  const providerApple = new OAuthProvider('apple.com')
 
   const signInGoogle = async() => {
-    const response = await signInWithPopup(firebaseAuth, providerGoogle)
-    console.log(response)
+    try {
+      const response = await signInWithPopup(firebaseAuth, providerGoogle)
+      router.push('/about')
+    } catch (error) {
+      alert(error.message)
+    }
   }
-  const signInApple = async() => {
-    const response = await signInWithPopup(firebaseAuth, providerApple)
-    console.log(response)
+
+  const signUpWithEmail = async() => {
+    try {
+      const response = await createUserWithEmailAndPassword(firebaseAuth, email, password )
+      setEmail('')
+      setPassword('')
+    } catch (error) {
+      alert(error.message)
+    }
+  }
+  const signInWithEmail = async(e) => {
+    e.preventDefault();
+    try {
+      const response = await signInWithEmailAndPassword(firebaseAuth, email, password )
+      setEmail('')
+      setPassword('')
+      setAuthError(false)
+      router.push('/about')
+    } catch (error) {
+      setAuthError(true)
+    }
   }
 
   return (
     <div className='container'>
       <Header/>
     <div className='wrapper'>
-      <h3 className='title'>Auth/Reg</h3>
-      <div>
-        <input 
-        type="text" 
-        placeholder='E-mail' 
-        className='input-text'
-        />
+      <h3 className='title'>Pokemon Auth</h3>
+      {authError ? <AuthError/> : ''}
+      <form>
+        <div className="auth-inputs">
+            <input 
+            type="email" 
+            placeholder='E-mail'
+            required 
+            className='input-text'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            />
+            <input 
+            type="password" 
+            placeholder='Password' 
+            className='input-text'
+            required
+            minLength={6}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            />
+        </div>
+        <div className='buttons'>
+            <button 
+            className='btn' 
+            style={{backgroundColor: colors.lightBlue }}
+            onClick={signInWithEmail}
+            >
+              Login
+            </button>
+            <button 
+            className='btn' 
+            style={{border: `2px solid ${colors.lightBlue}`}}
+            onClick={signUpWithEmail}
+            >
+              Sign Up
+            </button>
       </div>
-      <div>
-        <input 
-        type="text" 
-        placeholder='Password' 
-        className='input-text'
-        />
-      </div>
-      <div className='buttons'>
-        <button className='btn' style={{backgroundColor: colors.lightBlue }}>Login</button>
-        <button className='btn' style={{border: `2px solid ${colors.lightBlue}`}}>Sign Up</button>
-      </div>
+      </form>
       <div className="auth-buttons">
         <div className="google-wrapper">
             <FcGoogle/>
@@ -52,14 +107,6 @@ export default function Home() {
             onClick={signInGoogle}
             >
               Sign in with Google</button>
-        </div>
-        <div className="apple-wrapper">
-            <AiFillApple style={{color: '#fff'}}/>
-            <button 
-            className='auth-btn'
-            onClick={signInApple}
-            >
-              Sign in with Apple</button>
         </div>
         </div>
     </div>
