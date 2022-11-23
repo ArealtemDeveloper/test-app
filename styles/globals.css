@@ -64,6 +64,25 @@ body {
   width: 100%;
   background-color: #A7CBD9;
   height: 70px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.header-btn {
+  border: none;
+  cursor: pointer;
+  border-radius: 1rem;
+  margin: 1rem;
+  width: 50px;
+  height: 30px;
+  color: #2D3436;
+  font-weight: 600;
+  transition: 0.2s ease-in;
+}
+
+.header-btn:hover {
+  background-color: #24A6D9;
 }
 
 /*About Page*/
@@ -77,10 +96,53 @@ body {
   padding: 1rem;
   height: 200px;
   width: 100px;
-  border: 1px solid #A7CBD9;
+  border: 2px solid #24A6D9;
+  border-radius: 10px;
   display: flex;
   flex: 1;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+/*Auth Buttons*/
+
+.auth-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.google-wrapper {
+  cursor: pointer;
+  width: 250px;
+  height: 35px;
+  background-color: #FF6347;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+}
+
+.apple-wrapper {
+  cursor: pointer;
+  margin-top: 5px;
+  width: 250px;
+  height: 35px;
+  background-color: #2D3436;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+}
+
+.auth-btn {
+  width: 200px;
+  height: 35px;
+  cursor: pointer;
+  font-weight: 500;
+  border: none;
+  background-color: inherit;
+  color: #fff;
 }
