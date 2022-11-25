@@ -1,8 +1,8 @@
-import { colors } from "../colors"
-import Header from "../components/Header"
 import { FcGoogle } from 'react-icons/fc'
 import { AiFillApple } from 'react-icons/ai'
+import { FiSettings } from 'react-icons/fi'
 import { AuthError } from "../components/AuthError"
+import { ru, en, sp } from '../translations'
 
 import { 
   getAuth, 
@@ -11,17 +11,53 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword
 } from 'firebase/auth'
+import useLocalStorage from 'use-local-storage'
 import { firebaseApp } from "../firebase/firebaseConfig"
 import { useState } from "react"
 import { useRouter } from "next/router"
+import { Sidebar } from "../components/Sidebar"
 
 export default function Home() {
 
   const [ email, setEmail ] = useState('')
   const [ password, setPassword ] = useState('')
   const [ authError, setAuthError ] = useState(false)
+  const [ active, setActive ] = useState(false)
   const router = useRouter()
 
+     //Lang Switcher 
+     const { locale } = router
+   
+     let t = locale 
+      if(locale === 'ru') {
+        t = ru
+      }else if (locale === 'en') {
+        t = en
+      }else if (locale === 'sp') {
+        t = sp
+      }
+
+     const languageToggleRu = () => {
+       router.push('/ru')
+     }
+     const languageToggleEn = () => {
+      router.push('/en')
+    }
+    const languageToggleSp = () => {
+      router.push('/sp')
+    }
+
+
+  //Theme Switcher
+
+  const [theme, setTheme] = useLocalStorage('theme' ? 'dark' : 'light')
+
+  const switchTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light'
+    setTheme(newTheme)
+  }
+
+  //Auth
   const firebaseAuth = getAuth(firebaseApp)
   const providerGoogle = new GoogleAuthProvider()
 
@@ -52,15 +88,26 @@ export default function Home() {
       setAuthError(false)
       router.push('/about')
     } catch (error) {
+      setEmail('')
+      setPassword('')
       setAuthError(true)
     }
   }
 
   return (
-    <div className='container'>
-      <Header/>
+    <div className='container' data-theme={theme}>
+      <FiSettings className='settings-btn'  onClick={() => setActive(true)}/>
+      <Sidebar 
+      active={active} 
+      setActive={setActive}
+      switchTheme={switchTheme}
+      languageToggleRu={languageToggleRu}
+      languageToggleEn={languageToggleEn}
+      languageToggleSp={languageToggleSp}
+      theme={theme}
+      />
     <div className='wrapper'>
-      <h3 className='title'>Pokemon Auth</h3>
+      <h3 className='title'>{t.auth}</h3>
       {authError ? <AuthError/> : ''}
       <form>
         <div className="auth-inputs">
@@ -85,17 +132,16 @@ export default function Home() {
         <div className='buttons'>
             <button 
             className='btn' 
-            style={{backgroundColor: colors.lightBlue }}
+            
             onClick={signInWithEmail}
             >
-              Login
+              {t.login}
             </button>
             <button 
             className='btn' 
-            style={{border: `2px solid ${colors.lightBlue}`}}
             onClick={signUpWithEmail}
             >
-              Sign Up
+              {t.signUp}
             </button>
       </div>
       </form>
@@ -106,7 +152,7 @@ export default function Home() {
             className='auth-btn'
             onClick={signInGoogle}
             >
-              Sign in with Google</button>
+              {t.google}</button>
         </div>
         </div>
     </div>

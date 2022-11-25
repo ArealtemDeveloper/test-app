@@ -3,4 +3,9 @@ const nextConfig = {
   reactStrictMode: true,
 }
 
-module.exports = nextConfig
+module.exports = {
+  i18n: {
+    locales: ["ru", "en", "sp"],
+    defaultLocale: "ru",
+  }
+}
