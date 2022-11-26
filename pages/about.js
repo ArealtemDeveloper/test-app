@@ -1,10 +1,11 @@
-import Image from "next/image";
 import { CiLight } from 'react-icons/ci'
-import { MdDarkMode } from 'react-icons/md'
 import useLocalStorage from 'use-local-storage'
+import { userAccesToken } from '../utils/checkUserAcces'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 
 
-const about = ({data}) => {
+const About = ({data}) => {
 
   const [theme, setTheme] = useLocalStorage('theme' ? 'dark' : 'light')
 
@@ -13,30 +14,41 @@ const about = ({data}) => {
     setTheme(newTheme)
   }
 
+  //Acces Token check
+
+  const [acces, setAcces] = useState(false)
+  const router = useRouter()
+
+  useEffect(() => {
+    const accesToken = userAccesToken()
+    if(!accesToken) {
+      router.push('/')
+    }else {
+      setAcces(true)
+    }
+  },[])
+
   return (
-    <div className='pokemon-wrapper' data-theme={theme}>
-        <div className="theme-switcher-about">
-                {theme === 'dark' ? 
-                <MdDarkMode 
-                className='theme-btn' 
-                onClick={switchTheme}
-                style={{padding: '2rem'}}
-                /> 
-                : 
-                <CiLight 
-                className='theme-btn' 
-                onClick={switchTheme}
-                style={{padding: '2rem'}}
-                />
-                }
-            </div>
-        {data.map((pokemon,index) => (
-            <div key={pokemon.name} className='pokemon-card'>
-                <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index+1}.png`}/> 
-                <h3>{pokemon.name}</h3>
+    <>
+      { acces === true ? 
+      <div className='pokemon-wrapper' data-theme={theme}>
+            <div className='theme-switcher-about'>
+                  <CiLight 
+                  className='theme-btn' 
+                  onClick={switchTheme}
+                  style={{padding: '2rem'}}
+                  />
           </div>
-        ))}
-    </div>
+          {data.map((pokemon,index) => (
+              <div key={pokemon.name} className='pokemon-card'>
+                  <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index+1}.png`}/> 
+                  <h3>{pokemon.name}</h3>
+            </div>
+          ))}
+      </div>
+        : <h1 className='error'>Для того, чтобы увидеть покемонов, пожалуйста, авторизуйтесь!</h1>}
+    </>
+
   )
 }
 export const getStaticProps = async () => {
@@ -52,4 +64,4 @@ export const getStaticProps = async () => {
     };
   };
 
-export default about
+export default About

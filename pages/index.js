@@ -1,5 +1,4 @@
 import { FcGoogle } from 'react-icons/fc'
-import { AiFillApple } from 'react-icons/ai'
 import { FiSettings } from 'react-icons/fi'
 import { AuthError } from "../components/AuthError"
 import { ru, en, sp } from '../translations'
@@ -16,6 +15,8 @@ import { firebaseApp } from "../firebase/firebaseConfig"
 import { useState } from "react"
 import { useRouter } from "next/router"
 import { Sidebar } from "../components/Sidebar"
+import { userAccesToken } from '../utils/checkUserAcces'
+
 
 export default function Home() {
 
@@ -38,13 +39,13 @@ export default function Home() {
       }
 
      const languageToggleRu = () => {
-       router.push('/ru')
+       router.push('/', '/', {locale: 'ru'})
      }
      const languageToggleEn = () => {
-      router.push('/en')
+      router.push('/', '/',  {locale: 'en'})
     }
     const languageToggleSp = () => {
-      router.push('/sp')
+      router.push('/', '/', {locale: 'sp'})
     }
 
 
@@ -76,17 +77,24 @@ export default function Home() {
       setEmail('')
       setPassword('')
     } catch (error) {
-      alert(error.message)
+      console.log(error)
     }
   }
   const signInWithEmail = async(e) => {
     e.preventDefault();
+    
     try {
-      const response = await signInWithEmailAndPassword(firebaseAuth, email, password )
+      const { user } = await signInWithEmailAndPassword(firebaseAuth, email, password )
+      const { refreshToken, providerData } = user
+      
+      localStorage.setItem("user", JSON.stringify(providerData))
+      localStorage.setItem("accesToken", JSON.stringify(refreshToken))
+
+      router.push('/about')
       setEmail('')
       setPassword('')
       setAuthError(false)
-      router.push('/about')
+      
     } catch (error) {
       setEmail('')
       setPassword('')

@@ -1,5 +1,4 @@
 import { CiLight } from 'react-icons/ci'
-import { MdDarkMode } from 'react-icons/md'
 import { BsFillArrowRightSquareFill } from 'react-icons/bs'
 
 export const Sidebar = ({ 
@@ -22,11 +21,7 @@ export const Sidebar = ({
         </div>
         <div className='themes' style={{borderTop: '2px solid #fff'}}>
             <div style={{marginTop: '1rem'}}>
-                {theme === 'dark' ? 
-                <MdDarkMode className='theme-btn' onClick={switchTheme}/> 
-                : 
                 <CiLight className='theme-btn' onClick={switchTheme}/>
-                }
             </div>
             <div>
                 <BsFillArrowRightSquareFill
