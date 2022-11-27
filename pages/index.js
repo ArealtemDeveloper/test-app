@@ -15,6 +15,7 @@ import { firebaseApp } from "../firebase/firebaseConfig"
 import { useState } from "react"
 import { useRouter } from "next/router"
 import { Sidebar } from "../components/Sidebar"
+import { AuthForm } from '../components/AuthForm'
 
 export default function Home() {
 
@@ -114,43 +115,16 @@ export default function Home() {
       />
     <div className='wrapper'>
       <h3 className='title'>{t.auth}</h3>
-      {authError ? <AuthError/> : ''}
-      <form>
-        <div className="auth-inputs">
-            <input 
-            type="email" 
-            placeholder='E-mail'
-            required 
-            className='input-text'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            />
-            <input 
-            type="password" 
-            placeholder='Password' 
-            className='input-text'
-            required
-            minLength={6}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            />
-        </div>
-        <div className='buttons'>
-            <button 
-            className='btn' 
-            
-            onClick={signInWithEmail}
-            >
-              {t.login}
-            </button>
-            <button 
-            className='btn' 
-            onClick={signUpWithEmail}
-            >
-              {t.signUp}
-            </button>
-      </div>
-      </form>
+      {authError ? <AuthError t={t}/> : ''}
+      <AuthForm 
+      email={email}
+      setEmail={setEmail}
+      password={password}
+      setPassword={setPassword}
+      signInWithEmail={signInWithEmail}
+      signUpWithEmail={signUpWithEmail}
+      t={t}
+      />
       <div className="auth-buttons">
         <div className="google-wrapper">
             <FcGoogle/>

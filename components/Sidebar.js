@@ -9,6 +9,7 @@ export const Sidebar = ({
     languageToggleRu,
     languageToggleEn,
     languageToggleSp,
+    t
     }) => {
 
   return (
