@@ -15,8 +15,6 @@ import { firebaseApp } from "../firebase/firebaseConfig"
 import { useState } from "react"
 import { useRouter } from "next/router"
 import { Sidebar } from "../components/Sidebar"
-import { userAccesToken } from '../utils/checkUserAcces'
-
 
 export default function Home() {
 

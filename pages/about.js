@@ -3,6 +3,7 @@ import useLocalStorage from 'use-local-storage'
 import { userAccesToken } from '../utils/checkUserAcces'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import { AuthNeed } from '../components/AuthNeed'
 
 
 const About = ({data}) => {
@@ -46,7 +47,7 @@ const About = ({data}) => {
             </div>
           ))}
       </div>
-        : <h1 className='error'>Для того, чтобы увидеть покемонов, пожалуйста, авторизуйтесь!</h1>}
+        : <AuthNeed/>}
     </>
 
   )

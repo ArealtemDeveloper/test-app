@@ -223,10 +223,19 @@ body {
   position: absolute;
 }
 
-.error {
-  text-align: center;
-  color: #FF6347;
+/*Auth Need component*/
+
+.auth-need {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.auth-need-text {
+  text-decoration: underline;
+}
+
 
 /*Media query*/
 
